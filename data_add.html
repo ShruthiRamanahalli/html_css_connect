@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+<html>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link type="text/css" rel="stylesheet" href="../static/css/add_code_css.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        $(".button").on("click", function() {
+          $(".loading-icon").removeClass("hide");
+          $(".button").attr("disabled", true);
+          $(".btn-txt").text("Uploading...");
+          $.get("https://jsonplaceholder.typicode.com/posts", function(data) {
+            $(".loading-icon").addClass("hide");
+            $(".button").attr("disabled", false);
+            $(".btn-txt").text("Upload");
+            });
+        });
+      });
+    </script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+            <div id="ui">
+                <h1 class="card-title text-center">CODE UPLOAD FORM</h1>
+                <form class="form-group" action="/getData" method="post" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="mySelect" class="form-label">Country</label>
+                            <select class="form-control" id="mySelect"  name="country" onchange="myFunction()" required>,
+                                <option selected disabled value="">Choose...</option>
+                                <option value="uk">UK</option>
+                                <option value="us">US</option>
+                            </select>
+                            <div id="validationServer01Feedback" class="invalid-feedback">
+                                Please select Country.
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                                <label for="demo" class="form-label">Code Type</label>
+                                <select class="form-control" id="demo" name="codetype" required>
+
+                                </select>
+                                <div id="validationServer02Feedback" class="invalid-feedback">
+                                    Please select Code Type.
+                                </div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="prioClass">
+                        <label for="priorityId" class="form-label">Priority</label>
+                        <select class="form-select" id="priorityId" name="priority" disabled="disabled" aria-describedby="validationServer04Feedback" required>
+                            <option selected disabled value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                        <div id="validationServer06Feedback" class="invalid-feedback">
+                            Please select Priority.
+                        </div>
+                    </div>
+
+                    <br>
+                    <label class="form-label" for="fileSelect" >Select File</label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                        <span class="btn btn-primary" onclick="$(this).parent().find('input[type=file] ').click();" aria-placeholder="Select csv file">Browse</span>
+                        <input name="csv" onchange="$(this).parent().parent().find('.form-control').html($(this).val().split(/[\\|/]/).pop());" style="display: none;" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" ID="fileSelect" runat="server" value=Upload placeholder="Upload your file" class="form-control">
+                        </span>
+                        <span class="form-control"></span>
+
+                    </div>
+
+                    <br>
+                    <button class="button btn-primary btn-block btn-lg">
+                        <i class="loading-icon fa fa-spinner fa-spin hide"></i>
+                        <span class="btn-txt">Upload</span>
+                    </button>
+
+
+                </form>
+            </div>
+
+
+
+        </div>
+
+        <div class="col-lg-3"></div>
+    </div>
+
+</div>
+
+
+
+<script>
+function myFunction() {
+  var a = document.getElementById("mySelect").value;
+
+  if(a==="uk")
+  {
+    var array=["SNOMED", "OPCS", "READ", "WHO", "DMD"];
+  }
+  else if(a==="us")
+  {
+    var array=["CM", "CPT", "DCC"];
+  }
+  else
+  {
+    var array=["--select code--"];
+  }
+  var string="";
+  for(i=0;i<array.length;i++)
+  {
+    string=string+"<option value="+array[i]+">"+array[i]+"</option>";
+  }
+  document.getElementById("demo").innerHTML = string;
+
+
+
+  var c=document.getElementById("priorityId");
+  var a = document.getElementById("mySelect").value;
+    c.disabled=(a=="us"?true:false);
+    if(!c.disabled)
+    {
+        c.focus();
+    }
+    else
+    {
+         c.selectedIndex = 0;
+    }
+
+}
+
+const actualBtn = document.getElementById('csv');
+const fileChosen = document.getElementById('file-chosen');
+actualBtn.addEventListener('change', function(){fileChosen.textContent=this.files[0].name})
+
+
+
+</script>
+
+
+</body>
+
+
+</html>
+
+{% endblock %}
